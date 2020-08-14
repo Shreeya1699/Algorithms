@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void swap(int *a, int *b){
+        int temp= *a;
+        *a=*b;
+        *b=temp;
+    }
+    /* get two pointers prev points if prev->data > curr->data
+    nxt: next->data<curr->data*/
+    void dfs(TreeNode*root, TreeNode**prev, TreeNode **first, TreeNode **mid,TreeNode **last){
+        
+        if(root){
+            dfs(root->left,prev,first,mid,last);
+            if((*prev)!=NULL && (*prev)->val > root->val){
+                if((*first)==NULL){
+                    *first=*prev;
+                    *mid=root;
+                }
+                else{
+                    *last=root;
+                    
+                }
+            }
+            *prev=root;
+            dfs(root->right,prev,first,mid,last);
+        }
+         
+    }
+    void recoverTree(TreeNode* root) {
+        TreeNode*prev, *first, *mid, *last;
+        prev=mid=first=last=NULL;
+        if(root==NULL) return;
+        dfs(root,&prev,&first,&mid,&last);
+        if(first && last)
+            swap(&(first->val),&(last->val));
+        else if(first && mid)
+            swap(&(first->val),&(mid->val));
+        
+    }
+};
